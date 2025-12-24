@@ -2,7 +2,7 @@
 echo "Generating files..."
 set -e
 
-OUTPUT_DIR="./temp"
+OUTPUT_DIR="./tmp"
 
 mkdir -p $OUTPUT_DIR
 rm -rf $OUTPUT_DIR/*

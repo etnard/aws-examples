@@ -9,4 +9,4 @@ fi
 
 BUCKET_NAME=$1
 FILE_PREFIX=${2:-files}
-aws s3 sync ./temp s3://$BUCKET_NAME/$FILE_PREFIX
+aws s3 sync ./tmp s3://$BUCKET_NAME/$FILE_PREFIX
