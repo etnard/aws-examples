@@ -1,0 +1,8 @@
+#!/bin/bash
+echo "Deleting S3 bucket via CFN..."
+set -e
+
+STACK_NAME="cfn-s3-simple"
+aws cloudformation delete-stack \
+--stack-name $STACK_NAME \
+--region us-west-1 \
