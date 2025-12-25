@@ -3,4 +3,4 @@
 things used:
 
 aws-cli
-bash
+terraform
