@@ -11,14 +11,14 @@ echo "hello world" > myfile.txt
 ```
 
 ## Get the checksum for MD5
-# 6f5902ac237024bdd0c176cb93063dc4  myfile.txt
+### 6f5902ac237024bdd0c176cb93063dc4  myfile.txt
 
 ```sh
 md5sum myfile.txt
 ```
 
 ## Upload our file to s3 and look at its etag
-# "ETag": "\"6f5902ac237024bdd0c176cb93063dc4\"",
+### "ETag": "\"6f5902ac237024bdd0c176cb93063dc4\"",
 
 ```sh
 aws s3 cp myfile.txt s3://checksums-examples-etnard
@@ -26,8 +26,8 @@ aws s3api head-object --bucket checksums-examples-etnard --key myfile.txt
 ```
 
 ## Lets upload a file with a different type of checksum
-# af083b2d
-# rwg7LaA=
+### af083b2d
+### rwg7LaA=
 
 ```sh
 bundle exec ruby crc.rb myfile.txt
