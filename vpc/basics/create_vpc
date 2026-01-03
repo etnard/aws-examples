@@ -1,0 +1,71 @@
+#!/bin/bash
+echo "Creating VPC..."
+
+# Create a VPC with a specified CIDR block
+VPC_ID=$(
+aws ec2 create-vpc \
+--cidr-block 10.0.0.0/16 \
+--tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=my-basic-vpc}]' \
+--region us-east-1 \
+--query Vpc.VpcId \
+--output text
+)
+
+echo "VPC created with ID: $VPC_ID"
+
+# Turn on DNS support and DNS hostnames for the VPC
+aws ec2 modify-vpc-attribute \
+--vpc-id $VPC_ID \
+--enable-dns-support "{\"Value\":true}"
+
+# Create an IGW
+IGW_ID=$(
+aws ec2 create-internet-gateway \
+--query InternetGateway.InternetGatewayId \
+--output text
+)
+
+echo "Internet Gateway created with ID: $IGW_ID"
+
+# Attach the IGW to the VPC
+aws ec2 attach-internet-gateway \
+--internet-gateway-id $IGW_ID \
+--vpc-id $VPC_ID 
+
+# Create a public subnet
+SUBNET_ID=$(
+aws ec2 create-subnet \
+--vpc-id $VPC_ID \
+--cidr-block 10.0.0.0/20 \
+--tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=my-public-subnet}]' \
+--query Subnet.SubnetId \
+--output text
+)
+
+echo "Public Subnet created with ID: $SUBNET_ID"
+
+# Enable auto-assign public IP on the subnet
+aws ec2 modify-subnet-attribute \
+--subnet-id $SUBNET_ID \
+--map-public-ip-on-launch
+
+# Explicitly associate the public subnet with the main route table
+RT_ID=$(
+aws ec2 describe-route-tables \
+--filters "Name=vpc-id,Values=$VPC_ID" "Name=association.main,Values=true" \
+--query "RouteTables[0].RouteTableId" \
+--output text
+)   
+
+echo "Main Route Table ID: $RT_ID"
+
+aws ec2 associate-route-table \
+--subnet-id $SUBNET_ID \
+--route-table-id $RT_ID
+
+# Create a route in the main route table to direct internet-bound traffic to the IGW
+
+aws ec2 create-route \
+--route-table-id $RT_ID \
+--destination-cidr-block 0.0.0.0/0 \
+--gateway-id $IGW_ID
