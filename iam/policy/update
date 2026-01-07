@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# yq -o json policy.yaml > policy.json
+
+aws iam create-policy-version \
+    --policy-arn arn:aws:iam::. . .:policy/policy-example-s3 \
+    --policy-document "$(yq -o json policy.yaml)" \
+    --set-as-default
+
+aws iam attach-user-policy \
+    --user-name aws-examples \
+    --policy-arn arn:aws:iam::. . .:policy/policy-example-s3
