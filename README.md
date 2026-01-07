@@ -1,7 +1,3 @@
 # aws-examples
 
-things used:
-
-aws-cli
-terraform
-pulumi
+A codebase to upload examples while learning AWS.
