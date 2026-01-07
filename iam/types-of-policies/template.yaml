@@ -1,0 +1,33 @@
+Resources:
+  MyUser:
+    Type: "AWS::IAM::User"
+    Properties:
+      UserName: "policy-user"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/ReadOnlyAccess"
+
+  MyCustomerPolicy:
+    Type: "AWS::IAM::Policy"
+    Properties:
+      PolicyName: "EC2FullAccessPolicy"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action: "ec2:*"
+            Resource: "*"
+      Users:
+        - Ref: "MyUser"
+
+  MyInlinePolicy:
+    Type: "AWS::IAM::Policy"
+    Properties:
+      PolicyName: "EC2InlinePolicy"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action: "ec2:*"
+            Resource: "*"
+      Users:
+        - Ref: "MyUser"
